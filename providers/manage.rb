@@ -56,6 +56,8 @@ action :create do
     Chef::Log.warn('This recipe uses search. Chef Solo does not support search unless you install the chef-solo-search cookbook.')
   else
     search(new_resource.data_bag, "groups:#{new_resource.search_group} AND NOT action:remove") do |u|
+      next unless valid_user_for_environment?(u)
+
       u['username'] ||= u['id']
       u['groups'].each do |g|
         users_groups[g] = [] unless users_groups.key?(g)
@@ -174,6 +176,11 @@ action :create do
 end
 
 private
+
+def valid_user_for_environment?(user)
+  !user['restrict_to_environment'] ||
+  user['restrict_to_environment'].include?(node.chef_environment)
+end
 
 def manage_home_files?(home_dir, _user)
   # Don't manage home dir if it's NFS mount

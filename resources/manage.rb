@@ -25,6 +25,7 @@ state_attrs :cookbook,
             :data_bag,
             :group_id,
             :group_name,
+            :restrict_to_environment,
             :search_group
 
 # :data_bag is the object to search
@@ -38,3 +39,4 @@ attribute :group_name, kind_of: String, name_attribute: true
 attribute :group_id, kind_of: Integer
 attribute :cookbook, kind_of: String, default: 'users'
 attribute :manage_nfs_home_dirs, kind_of: [TrueClass, FalseClass], default: true
+attribute :restrict_to_environment, kind_of: [Array, String], default: nil
